@@ -1,19 +1,4 @@
-#include<iostream>
-#include<vector>
-#include<ctime>
-#include<cstdlib>
-
-template<typename T>
-void print(std::vector<T> const& values){
-    std::cout<<"\n--------------------------------------------------------------\n";
-    for(auto const& value : values) std::cout<<value<<" ";
-    std::cout<<"\n--------------------------------------------------------------\n";
-}
-
-void set_random_values(std::vector<int>& values){
-    srand(time(nullptr));
-    for(auto & value : values) value = rand() % 100 + 1;
-}
+#include "Common.h"
 
 std::vector<int> get_fail(std::string& str){
     std::vector<int> fail(str.size(), 0);
@@ -93,7 +78,7 @@ int main(){
     std::string s = "ababababc ababacad";
     std::string pattern = "cad";
 
-    print(get_fail(pattern));
+    BASIC_PRACTICE::print(std::move(get_fail(pattern)));
     auto result = kmp(s, pattern);
     std::cout<<result.first<<" "<<result.second<<"\n";
    
