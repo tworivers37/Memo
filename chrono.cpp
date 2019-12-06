@@ -31,13 +31,43 @@ void time(){
 
     struct tm * local = std::localtime(&tp);
     std::cout<<local->tm_year + 1900<<"/"<<local->tm_mon + 1<<"/"<<local->tm_mday<<" "<<local->tm_hour<<":"<<local->tm_min<<":"<<local->tm_sec<<"\n";
+}
 
+//기간은 산술연산자를 지원.
+
+//c++14 부터 자주 사용되는 시간 리터럴을 지원.
+//std::chrono::hours        ->  h   /   ex) 5h
+//std::chrono::minuts       ->  min /   ex) 10min
+//std::chrono::seconds      ->  s   /   ex) 15s
+//std::chrono::milliseconds ->  ms  /   ex) 20ms
+//std::chrono::microseconds ->  us  /   ex) 25us
+//std::chrono::nanoseconds  ->  ns  /   ex) 30ns
+
+using namespace std::literals::chrono_literals;
+void time2(){
+    
+    constexpr auto hours = 24h;
+    constexpr auto weak = 24h * 7;
+    std::cout<<hours.count()<<"\n";
+    std::cout<<weak.count()<<"\n";
+
+    // std::chrono::duration<A,B>
+    // A : 단위 시간
+    // B : 단위 시간의 길이
+    // std::ratio<1> or std::ratio<1,1> : 1초
+    // std::ratio<1,1000> : 1 밀리초
+    constexpr auto seconds = 3600s; // 1시간 = 3600초
+    std::chrono::duration<double, std::ratio<3600>> hours2 = seconds; // 단위 시간 3600(한 시간이 3600) : 3600 / 3600 = 1시간이라는 의미
+    std::cout<<hours2.count()<<"\n";
+    std::chrono::duration<double, std::ratio<60>> day = seconds; // 단위 시간 60(한 시간이 60) : 3600 / 60 = 60 -> 60분이라는 의미
+    std::cout<<day.count()<<"\n";
 }
 
 int main(){
     time();
-
-
+    std::cout<<"----------------------------------------------------------------------\n";
+    time2();
+    std::cout<<"----------------------------------------------------------------------\n";
 
     return 0;
 }
