@@ -26,11 +26,26 @@ void time(){
     s = std::asctime(std::gmtime(&tp));
     std::cout<<"Time now : "<<s<<"\n";
 
+/*
+    Epoch : Thu Jan  1 00:00:00 1970
+
+    Time min : Tue Sep 21 00:12:44 1677
+
+    Time max : Fri Apr 11 23:47:16 2262
+
+    Time now : Sun Dec  8 13:14:59 2019
+*/
+
     struct tm * t = std::gmtime(&tp);
     std::cout<<t->tm_year + 1900<<"/"<<t->tm_mon + 1<<"/"<<t->tm_mday<<" "<<t->tm_hour<<":"<<t->tm_min<<":"<<t->tm_sec<<"\n";
 
     struct tm * local = std::localtime(&tp);
     std::cout<<local->tm_year + 1900<<"/"<<local->tm_mon + 1<<"/"<<local->tm_mday<<" "<<local->tm_hour<<":"<<local->tm_min<<":"<<local->tm_sec<<"\n";
+
+/*
+    2019/12/8 13:14:59
+    2019/12/8 22:14:59
+*/
 }
 
 //기간은 산술연산자를 지원.
@@ -61,6 +76,13 @@ void time2(){
     std::cout<<hours2.count()<<"\n";
     std::chrono::duration<double, std::ratio<60>> day = seconds; // 단위 시간 60(한 시간이 60) : 3600 / 60 = 60 -> 60분이라는 의미
     std::cout<<day.count()<<"\n";
+/*
+    24
+    168
+    1
+    60
+*/
+
 }
 
 int main(){
