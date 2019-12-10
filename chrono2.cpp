@@ -6,8 +6,6 @@
 #include<boost/chrono/system_clocks.hpp>
 #include<sstream>
 
-
-
 int main(){
     boost::chrono::system_clock::time_point now = boost::chrono::system_clock::now();
     std::cout<<now<<"\n";
