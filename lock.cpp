@@ -115,3 +115,33 @@ void func4_1(){
     std::scoped_lock<std::recursive_mutex> s(r_m);
 }
 
+// unique_lock
+// unique_lock은 lock_guard와 비슷하나 추가적인 함수를 함수를 더 제공해준다.
+// unique_lock은 생성 시점에 lock을 걸지 않을 수 있고, 소멸하기 전에 unlock 또는 lock을 다시 걸수도 있다.
+// 만약 소멸 시점에 lock 걸려있다면 unlock을 수행한다.
+// 만약 생성과 동시에 lock을 걸지 않으려면 defer_lock을 인자로 주면 된다.
+/*
+    std::unique_lock<std::mutex> g(m, std::defer_lock);
+    std::unique_lock<std::mutex> g2(m2, std::defer_lock);
+    ...
+    std::lock(g, g2); // 이 때, lock걸림.
+*/
+
+/*
+    {
+        std::unique_lock<std::mutex> g(m);
+    } // 소멸되는 시점에 알아서 unlock
+*/
+
+/*
+    {
+        std::unique_lock<std::mutex> g(m);
+        ...
+        g.unlock(); // lock 해제
+    }
+*/
+
+// unique_lock은 unlock을 호출하지 않아 발생하는 문제를 막을 수 있고, 실행 중간에 exception 발생 등에 의한 
+// 흐름이 끊기게 되는 경우에도 안전하게 unlock을 해 줄 수 있다.
+// unique_lock은 lock_guard보다 유연하며 여러 기능을 제공하지만 mutex의 소유권을 정보를 저장하고 업데이트 하는 공간이 필요로하고
+// 부분적으로 lock_guard보다 느리다.
