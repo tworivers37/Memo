@@ -25,6 +25,10 @@ template<typename T, typename... ARGS>
 void print_variadic3(T t, ARGS... args){
     std::cout<<t<<" / ";
     // c++17에선 if constexpr 로 컴파일 타임에 특정 조건에따라 표현문을 활성화/비활성화 할 수 있음.
+    // if constexpr은 조건이 반드시 bool 타입으로 변환 될 수 있는 컴파일 타임 상수식이여야함.
+    // 대신, 조건이 참이라면 else에 해당하는 표현문은 컴파일되지 않고 (완전히 무시), 거짓이라면 else에 해당하는 부분만 컴파일 됨.
+    // 그러므로 sizeof...(args) 값이 0 이게 되면 print_variadic3(args...); 부분이(args는 0개) 
+    // 컴파일되지 않고 완전히 무시되어 컴파일 에러가 발생 안 함.
     if constexpr(sizeof...(args) != 0) print_variadic3(args...);
 }
 
