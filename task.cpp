@@ -113,11 +113,47 @@ void task2(){
     // thread 같은 경우는 eagar evalution과는 다르게, 바로 실행되나 새로운 thread에서 실행 된 것을 확인 할 수 있다.
 }
 
+// fire & forget future라고 하는 것이 있는데, 이는 아래와 같다.
+void task3(){
+    // 일반 future
+    auto fut = std::async(std::launch::async, [](){ return 100; });
+    std::cout<<fut.get()<<"\n";
+
+    // fire and forget future
+    // std::async 의 리턴 값을 받는 변수가 없음.
+    // 변수에 바인딩 되지 않으므로 곧바로 실행.
+    // 별도의 thread를 만들어서 콜백함수 실행.
+    std::async(std::launch::async, []{ std::cout<<"fire and forget\n"; });
+
+    // fire and forget future에서 std::async에 의해 생성된 future는 promise가 완료될 때까지 destructor를 기다린다.
+    // 즉, 콜백 함수가 끝날 때까지 멈춰있게 된다.
+    // 그러므로 아래와 같은 경우 차례대로 cout이 출력될 것이다.
+    std::async(std::launch::async, 
+        [](){
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::cout<<"first\n";
+        }
+    ); // 콜백 함수 끝날 때까지 대기.
+
+    std::async(std::launch::async, 
+        [](){
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::cout<<"second\n";
+        }
+    );
+
+}
+
+
 int main(){
     std::cout<<"main thread id : "<<std::this_thread::get_id()<<"\n";
+    std::cout<<"---------------------------------------------------------------------\n";
     task1();
     std::cout<<"---------------------------------------------------------------------\n";
     task2();
+    std::cout<<"---------------------------------------------------------------------\n";
+    task3();
+    std::cout<<"---------------------------------------------------------------------\n";
 
     return 0;
 }
