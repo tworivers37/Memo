@@ -145,6 +145,118 @@ void task3(){
 }
 
 
+// promise는 값이나 예외, 알림을 future로 보낼 수 있다.
+// 두 교신점(promise, future)은 별도의 thread 사이에서 이동될 수 있으며, thread 간의 값을 주고 받을 수 있다.
+void task4(){
+
+    // 값 설정
+    std::promise<int> p1;
+    std::future<int> f1 = p1.get_future();
+    std::thread t1(
+        [](std::promise<int>&& p){
+            p.set_value(100);
+            // p.set_value(200); // promise는 값이나 예외가 한 번이상 설정(set)되면 std::future_error 예외가 발생.
+        },
+        std::move(p1)
+    );
+
+    // 예외 처리
+    std::promise<int> p2;
+    std::future<int> f2 = p2.get_future();
+    std::thread t2(
+        [](std::promise<int>&& p){
+            try{
+                throw std::runtime_error("exception!!"); // 예외 발생.
+            }
+            catch(...){
+                p.set_exception(std::current_exception());
+            }
+        },
+        std::move(p2)
+    );
+
+
+    std::cout<<"f1 : "<<f1.get()<<"\n"; // blocking
+
+    try{
+        std::cout<<"f2 : "<<f2.get()<<"\n"; // 예외 발생.
+    }
+    catch(std::runtime_error& e){
+        std::cout<<e.what()<<"\n";
+    }
+
+    t1.join();
+    t2.join();
+}
+
+
+// std::shared_future : std::future와 반대로 복사 가능하며, 값 요청을 여러 번 할 수 있다.
+void task5(){
+    std::promise<int> p;
+    std::shared_future<int> sf = p.get_future();
+
+    std::async(
+        [](std::promise<int>&& p){
+            std::cout<<"first promise set\n";
+            p.set_value(1);
+        },
+        std::move(p)
+    );
+
+    std::cout<<"1 : "<<sf.get()<<"\n";
+    std::cout<<"2 : "<<sf.get()<<"\n";
+    std::cout<<"3 : "<<sf.get()<<"\n";
+
+    std::shared_future<int> sf2 = sf;
+    
+    // sf.get() == sf2.get()
+    std::cout<<"sf : "<<sf.get()<<"\n";
+    std::cout<<"sf2 : "<<sf2.get()<<"\n";
+
+    std::promise<int> p2;
+    sf = p2.get_future(); // 다른 promise
+
+    std::async(
+        [](std::promise<int>&& p2){
+            std::cout<<"second promise set\n";
+            p2.set_value(10);
+        },
+        std::move(p2)
+    );
+
+    std::cout<<"sf : "<<sf.get()<<"\n";     // 10
+    std::cout<<"sf2 : "<<sf2.get()<<"\n";   // 1
+}
+
+// promise & future를 사용한 thread 동기화
+void task6(){
+    std::promise<void> p;
+    std::future<void> f = p.get_future();
+
+    // wait thread
+    std::thread t1(
+        [](std::future<void>&& f){ 
+            std::cout<<"Waiting for work.\n";
+            f.wait(); // 결과를 기다림.
+            // [참고] f.valid() : 결과를 사용 할 수 있는지 확인. f.get()을 사용 한 다음은 false를 리턴.
+            std::cout<<"work done.\n";
+        },
+        std::move(f)
+    );
+
+    // data set thread
+    std::thread t2(
+        [](std::promise<void>&& p){
+            std::cout<<"Data is ready\n";
+            p.set_value();  // 호출되면 future의 wait가 해제됨.
+        },
+        std::move(p)
+    );
+
+    t1.join();
+    t2.join();
+}
+
 int main(){
     std::cout<<"main thread id : "<<std::this_thread::get_id()<<"\n";
     std::cout<<"---------------------------------------------------------------------\n";
@@ -154,6 +266,11 @@ int main(){
     std::cout<<"---------------------------------------------------------------------\n";
     task3();
     std::cout<<"---------------------------------------------------------------------\n";
+    task4();
+    std::cout<<"---------------------------------------------------------------------\n";
+    task5();
+    std::cout<<"---------------------------------------------------------------------\n";
+    task6();
 
     return 0;
 }
