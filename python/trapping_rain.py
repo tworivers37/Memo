@@ -50,7 +50,7 @@ print(trapping_rain([2, 1, 1, 1, 1]))
 print(trapping_rain([0, 0, 5, 0, 0]))
 print(trapping_rain([1, 0, 5, 0, 5]))
 print(trapping_rain([1, 2, 5, 4, 5]))
-
+print(trapping_rain([3, 0, 6, 4, 3, 2, 0]))
 
 '''
 1. 현재 인덱스의 왼쪽에서 가장 높은 건물의 높이를 구한다
@@ -78,6 +78,15 @@ def trapping_rain2(buildings):
         total_height += max(0, upper_bound - buildings[i])
 
     return total_height
+print('----')
+print(trapping_rain2([3, 0, 0, 2, 0, 4]))
+print(trapping_rain2([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))
+print(trapping_rain2([0, 0, 0, 0, 0]))
+print(trapping_rain2([2, 1, 1, 1, 1]))
+print(trapping_rain2([0, 0, 5, 0, 0]))
+print(trapping_rain2([1, 0, 5, 0, 5]))
+print(trapping_rain2([1, 2, 5, 4, 5]))
+print(trapping_rain2([3, 0, 6, 4, 3, 2, 0]))
 
 def trapping_rain3(buildings):
     # 코드를 작성하세요
@@ -91,3 +100,12 @@ def trapping_rain3(buildings):
             max = i
             sum += tmp
     return sum
+print('----')
+print(trapping_rain3([3, 0, 0, 2, 0, 4]))
+print(trapping_rain3([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))
+print(trapping_rain3([0, 0, 0, 0, 0]))
+print(trapping_rain3([2, 1, 1, 1, 1]))
+print(trapping_rain3([0, 0, 5, 0, 0]))
+print(trapping_rain3([1, 0, 5, 0, 5]))
+print(trapping_rain3([1, 2, 5, 4, 5]))
+print(trapping_rain3([3, 0, 6, 4, 3, 2, 0]))
