@@ -25,21 +25,16 @@ def trapping_rain(buildings):
     while total_builgings_value > 0:
         this_building = None
         count = 0
-        closed = False
         for i in range(0 if (this_building == None) else this_building, len(buildings)):
             if buildings[i] == 0:
                 if this_building is not None and i != len(buildings) - 1:
                     count += 1
-                    closed = False
             else:
                 this_building = i
-
                 buildings[this_building] -= 1
                 total_builgings_value -= 1
-                closed = True
-
-        if closed == True:
-            total += count
+                total += count
+                count = 0
 
     return total
 
@@ -87,25 +82,3 @@ print(trapping_rain2([0, 0, 5, 0, 0]))
 print(trapping_rain2([1, 0, 5, 0, 5]))
 print(trapping_rain2([1, 2, 5, 4, 5]))
 print(trapping_rain2([3, 0, 6, 4, 3, 2, 0]))
-
-def trapping_rain3(buildings):
-    # 코드를 작성하세요
-    max = 0
-    tmp = 0
-    sum = 0
-    for i in buildings:
-        if i < max:
-            tmp += max - i
-        else:
-            max = i
-            sum += tmp
-    return sum
-print('----')
-print(trapping_rain3([3, 0, 0, 2, 0, 4]))
-print(trapping_rain3([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))
-print(trapping_rain3([0, 0, 0, 0, 0]))
-print(trapping_rain3([2, 1, 1, 1, 1]))
-print(trapping_rain3([0, 0, 5, 0, 0]))
-print(trapping_rain3([1, 0, 5, 0, 5]))
-print(trapping_rain3([1, 2, 5, 4, 5]))
-print(trapping_rain3([3, 0, 6, 4, 3, 2, 0]))
