@@ -21,12 +21,12 @@ class heap
 {
 public:
 	heap(int size = 1000)
-		: last_index_{0}, values_(size, 0)
+		: last_index_{-1}, values_(size, 0)
 	{
 	}
 
 	heap(std::vector<int>& values, int begin, int end) 
-		: last_index_{0}, values_(end - begin + 1 + 1, 0)
+		: last_index_{-1}, values_(end - begin + 1, 0)
 	{
 		for(int index = begin; index <= end; ++index)
 		{
@@ -37,7 +37,7 @@ public:
 	void insert_node(int value)
 	{
 		int index = ++last_index_;
-		while(index != 1)
+		while(index != -1)
 		{
 			if(values_[get_parent(index)] > value)
 			{
@@ -51,13 +51,13 @@ public:
 
 	int delete_node()
 	{
-		int index = 1;
+		int index = 0;
 		int delete_value = values_[index];
 		int last_value = values_[last_index_--];
 
 		while(index <= last_index_)
 		{
-			if(get_priority(index) <= 0) break;
+			if(get_priority(index) < 0) break;
 			if(values_[get_priority(index)] < last_value)
 			{
 				values_[index] = values_[get_priority(index)];
@@ -83,9 +83,9 @@ public:
 	}
 
 private:
-	int get_parent(int index){ return index / 2; }
-	int get_right(int index){ return index * 2 + 1; }
-	int get_left(int index){ return index * 2; }
+	int get_parent(int index){ return index % 2 == 0 ? index / 2 - 1 : index / 2; }
+	int get_right(int index){ return index * 2 + 2; }
+	int get_left(int index){ return index * 2 + 1; }
 	int get_priority(int index)
 	{
 		int left = get_left(index);
@@ -355,12 +355,15 @@ void intro_sort(std::vector<int>& values)
 }
 
 int main(){
-	std::vector<int> values(5000, 0);
+	std::vector<int> values(100, 0);
 	set_values(values);
 	print(values);
 
-	intro_sort(values);
-	print(values);
+
+	heap h(values, 0, values.size() - 1);
+	h.print_node();
+	// intro_sort(values);
+	// print(values);
 
 	return 0;
 }
