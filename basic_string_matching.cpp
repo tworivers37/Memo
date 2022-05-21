@@ -10,6 +10,33 @@ std::vector<int> get_fail(std::string& str){
     return fail;
 }
 
+std::vector<int> get_fail2(std::string& str){
+    std::vector<int> fail(str.size(), 0);
+    int i=0;
+    for(int j=1;j<str.size();++j){
+        while(i>0&&str[i]!=str[j]) i=fail[i-1];
+        if(str[i]==str[j]) fail[j]=++i;
+    }
+    return fail;
+}
+
+std::vector<int> kmp2(std::string& str, std::string& pattern){
+    std::vector<int> fail(std::move(get_fail2(pattern)));
+    std::vector<int> result;
+    int j=0;
+    for(int i=0;i<str.size();++i){
+        while(j>0&&str[i]!=pattern[j]) j=fail[j-1];
+        if(str[i]==pattern[j]){
+            if(j==pattern.size()-1){
+                result.push_back(i-pattern.size()+1);
+                j=fail[j];
+            }
+            else ++j;
+        } 
+    }
+    return result;
+}
+
 std::pair<int, int> kmp(std::string& str, std::string& pattern){
     std::vector<int> fail(std::move(get_fail(pattern)));
     
@@ -75,12 +102,13 @@ class Trie{
 };
 
 int main(){
-    std::string s = "ababababc ababacad";
-    std::string pattern = "cad";
+    std::string s = "ababababc ababadacad";
+    std::string pattern = "ababad";
 
-    BASIC_PRACTICE::print(std::move(get_fail(pattern)));
-    auto result = kmp(s, pattern);
-    std::cout<<result.first<<" "<<result.second<<"\n";
+    BASIC_PRACTICE::print(std::move(get_fail2(pattern)));
+    auto result = kmp2(s, pattern);
+    for(auto const& i : result)std::cout<<i<<"~"<<i+pattern.size()-1<<"\n";
+    // std::cout<<result.first<<" "<<result.second<<"\n";
    
 
     return 0;
