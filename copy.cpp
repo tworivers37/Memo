@@ -55,93 +55,88 @@ void func4(target&& t){
         std::cout<<"func4(target&& t) : "<<&t<<"\n";
 }
 
-/*
-
------------ main start -----------
-target() : 0x01
-
-1 *******************************************
-func1(target const& t) : 0x01 
-
-2 *******************************************
-target() : 0x02
-func1(target const& t) : 0x02      
-~target() : 0x02
-
-3 *******************************************
-func2(target & t) : 0x01
-
-4 *******************************************
-target(target const&) : 0x02       
-func3(target t) : 0x02
-~target() : 0x02
-
-5 *******************************************
-target() : 0x02
-func3(target t) : 0x02
-~target() : 0x02
-
-6 *******************************************
-func4(target&& t) : 0x01
-
-7 *******************************************
-target() : 0x03
-operator=(target&) : 0x03
-
-8 *******************************************
-target() : 0x04
-operator(&&) : 0x04
-
-9 *******************************************
-target() : 0x05
-target() : 0x02
-operator(&&) : 0x05
-~target() : 0x02
-
------------ main end -------------
-~target() : 0x05
-~target() : 0x04
-~target() : 0x03
-~target() : 0x01
-
-*/
-
 int main(){
         std::cout<<"----------- main start -----------\n";
 
-        target t;
+        // target() : 0x01
+        target t; 
 
         std::cout<<"1 *******************************************\n";
+        /*
+                func1(target const& t) : 0x01 
+        */
         func1(t);
 
         std::cout<<"2 *******************************************\n";
+        /*
+                target() : 0x02
+                func1(target const& t) : 0x02      
+                ~target() : 0x02
+        */
         func1(target());
 
         std::cout<<"3 *******************************************\n";
+        /*
+                func2(target & t) : 0x01
+        */
         func2(t);
 
         std::cout<<"4 *******************************************\n";
+        /*
+                target(target const&) : 0x02       
+                func3(target t) : 0x02
+                ~target() : 0x02
+        */
         func3(t);
 
         std::cout<<"5 *******************************************\n";
+        /*
+                target() : 0x02
+                func3(target t) : 0x02
+                ~target() : 0x02
+        */
         func3(target());
 
         std::cout<<"6 *******************************************\n";
+        /*
+                func4(target&& t) : 0x01
+        */
         func4(std::move(t));
 
         std::cout<<"7 *******************************************\n";
+        /*
+                target() : 0x03
+                operator=(target&) : 0x03
+        */
         target t2;
         t2 = t;
 
         std::cout<<"8 *******************************************\n";
+        /*
+                target() : 0x04
+                operator(&&) : 0x04
+        */
         target t3;
         t3 = std::move(t);
 
         std::cout<<"9 *******************************************\n";
+        /*
+                target() : 0x05
+                target() : 0x02
+                operator(&&) : 0x05
+                ~target() : 0x02
+        */
         target t4;
         t4 = target();
 
         std::cout<<"----------- main end -------------\n";
+        /*
+                ~target() : 0x05
+                ~target() : 0x04
+                ~target() : 0x03
+                ~target() : 0x01
+        */
+       
         return 0;
 }
 
