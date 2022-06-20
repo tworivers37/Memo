@@ -457,8 +457,17 @@ void AVLTree<NodeType>::erase_node(data_type data)
         if(find->right().get() != nullptr)
         {
             current->data(std::move(find->data()));
-            find->parent()->right(find->right());
-            find->right()->parent(find->parent());
+
+            if(find->parent()->left() == find)
+            {
+                find->parent()->left(find->right());
+                find->right()->parent(find->parent());
+            }
+            else
+            {
+                find->parent()->right(find->right());
+                find->right()->parent(find->parent());
+            }
         }
         else
         {
