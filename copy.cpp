@@ -100,9 +100,11 @@ int main(){
         std::cout<<"6 *******************************************\n";
         /*
                 func4(target&& t) : 0x01
+                func4(target&& t) : 0x04
         */
         func4(std::move(t));
-
+        func4(target());
+        
         std::cout<<"7 *******************************************\n";
         /*
                 target() : 0x03
